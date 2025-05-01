@@ -18,4 +18,10 @@ public class DataProcessingService {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
+
+    public String summarizeText(String text, int maxWords) {
+        return Arrays.stream(text.split("\\s+"))
+                .limit(maxWords)
+                .collect(Collectors.joining(" "));
+    }
 }
