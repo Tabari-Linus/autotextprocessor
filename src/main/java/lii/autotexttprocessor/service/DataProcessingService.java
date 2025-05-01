@@ -11,5 +11,11 @@ public class DataProcessingService {
                 .map(String::toLowerCase)
                 .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
     }
-
+    public List<String> findMostFrequentWords(Map<String, Long> wordFrequencyMap, int topN) {
+        return wordFrequencyMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(topN)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 }
