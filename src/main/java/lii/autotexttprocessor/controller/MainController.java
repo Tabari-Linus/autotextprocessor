@@ -9,6 +9,7 @@ import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.service.RegexService;
 import lii.autotexttprocessor.service.DataProcessingService;
 import lii.autotexttprocessor.util.LoggerUtil;
+import lii.autotexttprocessor.util.RegexUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,6 +131,51 @@ public class MainController {
         } catch (Exception e) {
             LoggerUtil.logError("Error summarizing text", e);
             resultOutput.setText("Error summarizing text: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void findMatches() {
+        try {
+            String regex = regexInput.getText();
+            String inputText = textInput.getText();
+
+            if (!RegexUtil.isValidRegex(regex)) {
+                resultOutput.setText("Invalid regex pattern.");
+                return;
+            }
+
+            List<String> matches = RegexUtil.findMatches(inputText, regex);
+            if (matches.isEmpty()) {
+                resultOutput.setText("No matches found.");
+            } else {
+                resultOutput.setText("Matches:\n" + String.join("\n", matches));
+            }
+            LoggerUtil.logInfo("Performed regex search with pattern: " + regex);
+        } catch (Exception e) {
+            LoggerUtil.logError("Error finding matches", e);
+            resultOutput.setText("Error finding matches: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void replaceMatches() {
+        try {
+            String regex = regexInput.getText();
+            String inputText = textInput.getText();
+            String replacement = "[REPLACED]";
+
+            if (!RegexUtil.isValidRegex(regex)) {
+                resultOutput.setText("Invalid regex pattern.");
+                return;
+            }
+
+            String replacedText = RegexUtil.replaceMatches(inputText, regex, replacement);
+            resultOutput.setText("Replaced Text:\n" + replacedText);
+            LoggerUtil.logInfo("Performed regex replace with pattern: " + regex);
+        } catch (Exception e) {
+            LoggerUtil.logError("Error replacing matches", e);
+            resultOutput.setText("Error replacing matches: " + e.getMessage());
         }
     }
 
