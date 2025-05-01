@@ -10,6 +10,7 @@ public class LoggerUtil {
         logger.error(message, throwable);
     }
 
+
     public static void logInfo(String message) {
         logger.info(message);
     }
