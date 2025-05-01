@@ -22,5 +22,6 @@
     <HBox spacing="10" alignment="CENTER">
         <Button text="Load File" onAction="#loadFile"/>
         <Button text="Save File" onAction="#saveFile"/>
+        <Button text="Batch Process Files" onAction="#processBatchFiles"/>
     </HBox>
 </VBox>
