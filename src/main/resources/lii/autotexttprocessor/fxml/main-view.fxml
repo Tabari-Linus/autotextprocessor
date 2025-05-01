@@ -16,7 +16,7 @@
     <Label text="Automated Text Processor" styleClass="header"/>
     <TextField fx:id="regexInput" promptText="Enter Regex Pattern"/>
     <TextArea fx:id="textInput" promptText="Enter Text Data"/>
-    <Button text="Process" fx:id="processButton"/>
+    <Button text="Process" fx:id="processButton" onAction="#processText"/>
     <TextArea fx:id="resultOutput" promptText="Results will appear here" editable="false"/>
 
     <HBox spacing="10" alignment="CENTER">
