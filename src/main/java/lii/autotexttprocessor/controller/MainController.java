@@ -7,9 +7,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.service.RegexService;
+import lii.autotexttprocessor.service.DataProcessingService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainController {
 
@@ -22,6 +26,7 @@ public class MainController {
 
     private final RegexService regexService = new RegexService();
     private final FileService fileService = new FileService();
+    private final DataProcessingService dataProcessingService = new DataProcessingService();
 
     private Stage stage;
 
@@ -86,4 +91,21 @@ public class MainController {
             }
         }
     }
+
+    @FXML
+    public void analyzeWordFrequency() {
+        String inputText = textInput.getText();
+        Map<String, Long> wordFrequency = dataProcessingService.analyzeWordFrequency(inputText);
+        StringBuilder result = new StringBuilder("Word Frequency Analysis:\n");
+        wordFrequency.forEach((word, count) -> result.append(word).append(": ").append(count).append("\n"));
+        resultOutput.setText(result.toString());
+    }
+
+    @FXML
+    public void summarizeText() {
+        String inputText = textInput.getText();
+        String summary = dataProcessingService.summarizeText(inputText, 50); // Limit to 50 words
+        resultOutput.setText("Text Summary:\n" + summary);
+    }
+
 }
