@@ -34,4 +34,15 @@
         <Button text="Find Matches" onAction="#findMatches"/>
         <Button text="Replace Matches" onAction="#replaceMatches"/>
     </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <TextField fx:id="idInput" promptText="ID"/>
+        <TextField fx:id="nameInput" promptText="Name"/>
+        <TextField fx:id="valueInput" promptText="Value"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Add Entry" onAction="#addDataEntry"/>
+        <Button text="Update Entry" onAction="#updateDataEntry"/>
+        <Button text="Delete Entry" onAction="#deleteDataEntry"/>
+    </HBox>
 </VBox>
