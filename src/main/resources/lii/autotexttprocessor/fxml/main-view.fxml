@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.Button?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
@@ -11,6 +13,9 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <Label text="Automated Text Processor" styleClass="header"/>
+    <TextField fx:id="regexInput" promptText="Enter Regex Pattern"/>
+    <TextArea fx:id="textInput" promptText="Enter Text Data"/>
+    <Button text="Process" fx:id="processButton"/>
+    <TextArea fx:id="resultOutput" promptText="Results will appear here" editable="false"/>
 </VBox>
