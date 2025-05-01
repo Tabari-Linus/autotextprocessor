@@ -18,4 +18,9 @@
     <TextArea fx:id="textInput" promptText="Enter Text Data"/>
     <Button text="Process" fx:id="processButton"/>
     <TextArea fx:id="resultOutput" promptText="Results will appear here" editable="false"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Load File" onAction="#loadFile"/>
+        <Button text="Save File" onAction="#saveFile"/>
+    </HBox>
 </VBox>
