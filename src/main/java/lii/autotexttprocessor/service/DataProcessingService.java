@@ -34,11 +34,11 @@ public class DataProcessingService {
                 .collect(Collectors.toList());
     }
 
-//    public String summarizeText(String text, int maxWords) {
-//        return Arrays.stream(text.split("\\s+"))
-//                .limit(maxWords)
-//                .collect(Collectors.joining(" "));
-//    }
+    public String summarizeText(String text, int maxWords) {
+        return Arrays.stream(text.split("\\s+"))
+                .limit(maxWords)
+                .collect(Collectors.joining(" "));
+    }
 
     public List<String> extractSentences(String text) {
         return Arrays.stream(text.split("[.!?]\\s*"))
@@ -47,23 +47,23 @@ public class DataProcessingService {
                 .collect(Collectors.toList());
     }
 
-    public String summarizeText(String text, int maxSentences) {
-        List<String> sentences = extractSentences(text);
-        Map<String, Integer> wordFrequencies = wordFrequencyAnalysis(text);
-
-        // Simple scoring - sentences with more frequent words are more important
-        Map<String, Integer> sentenceScores = new HashMap<>();
-        for (String sentence : sentences) {
-            int score = Arrays.stream(sentence.split("\\s+"))
-                    .mapToInt(word -> wordFrequencies.getOrDefault(word.toLowerCase(), 0))
-                    .sum();
-            sentenceScores.put(sentence, score);
-        }
-
-        return sentenceScores.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(maxSentences)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.joining(". ")) + ".";
-    }
+//    public String summarizeText(String text, int maxSentences) {
+//        List<String> sentences = extractSentences(text);
+//        Map<String, Long> wordFrequencies = wordFrequencyAnalysis(text);
+//
+//        // Simple scoring - sentences with more frequent words are more important
+//        Map<String, Long> sentenceScores = new HashMap<>();
+//        for (String sentence : sentences) {
+//            int score = Arrays.stream(sentence.split("\\s+"))
+//                    .mapToInt(word -> wordFrequencies.getOrDefault(word.toLowerCase(), 0))
+//                    .sum();
+//            sentenceScores.put(sentence, score);
+//        }
+//
+//        return sentenceScores.entrySet().stream()
+//                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+//                .limit(maxSentences)
+//                .map(Map.Entry::getKey)
+//                .collect(Collectors.joining(". ")) + ".";
+//    }
 }
