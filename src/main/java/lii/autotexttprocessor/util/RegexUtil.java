@@ -17,5 +17,16 @@ public class RegexUtil {
         return matches;
     }
 
+    public static String replaceMatches(String text, String regex, String replacement) {
+        return text.replaceAll(regex, replacement);
+    }
 
+    public static boolean isValidRegex(String regex) {
+        try {
+            Pattern.compile(regex);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
