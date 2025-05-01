@@ -24,4 +24,9 @@
         <Button text="Save File" onAction="#saveFile"/>
         <Button text="Batch Process Files" onAction="#processBatchFiles"/>
     </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Analyze Word Frequency" onAction="#analyzeWordFrequency"/>
+        <Button text="Summarize Text" onAction="#summarizeText"/>
+    </HBox>
 </VBox>
