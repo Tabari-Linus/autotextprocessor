@@ -66,4 +66,24 @@ public class MainController {
             }
         }
     }
+
+    public void processBatchFiles() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Files for Batch Processing");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        List<File> files = fileChooser.showOpenMultipleDialog(stage);
+
+        if (files != null && !files.isEmpty()) {
+            List<String> filePaths = files.stream().map(File::getAbsolutePath).collect(Collectors.toList());
+            String regex = regexInput.getText();
+            String replacement = "[REPLACED]";
+
+            try {
+                fileService.processFiles(filePaths, regex, replacement);
+                resultOutput.setText("Batch processing completed successfully.");
+            } catch (IOException e) {
+                resultOutput.setText("Error during batch processing: " + e.getMessage());
+            }
+        }
+    }
 }
