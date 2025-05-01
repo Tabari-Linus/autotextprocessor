@@ -29,4 +29,9 @@
         <Button text="Analyze Word Frequency" onAction="#analyzeWordFrequency"/>
         <Button text="Summarize Text" onAction="#summarizeText"/>
     </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Find Matches" onAction="#findMatches"/>
+        <Button text="Replace Matches" onAction="#replaceMatches"/>
+    </HBox>
 </VBox>
