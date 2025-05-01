@@ -10,6 +10,7 @@ module lii.autotexttprocessor {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires org.slf4j;
 
     opens lii.autotexttprocessor to javafx.fxml;
     exports lii.autotexttprocessor;
