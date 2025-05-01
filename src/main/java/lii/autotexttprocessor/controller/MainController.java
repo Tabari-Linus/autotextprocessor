@@ -5,9 +5,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lii.autotexttprocessor.model.DataEntry;
 import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.service.RegexService;
 import lii.autotexttprocessor.service.DataProcessingService;
+import lii.autotexttprocessor.service.DataManagementService;
 import lii.autotexttprocessor.util.LoggerUtil;
 import lii.autotexttprocessor.util.RegexUtil;
 
@@ -25,10 +27,17 @@ public class MainController {
     private TextArea textInput;
     @FXML
     private TextArea resultOutput;
+    @FXML
+    private TextField idInput;
+    @FXML
+    private TextField nameInput;
+    @FXML
+    private TextField valueInput;
 
     private final RegexService regexService = new RegexService();
     private final FileService fileService = new FileService();
     private final DataProcessingService dataProcessingService = new DataProcessingService();
+    private final DataManagementService dataManagementService = new DataManagementService();
 
     private Stage stage;
 
@@ -176,6 +185,46 @@ public class MainController {
         } catch (Exception e) {
             LoggerUtil.logError("Error replacing matches", e);
             resultOutput.setText("Error replacing matches: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void addDataEntry() {
+        try {
+            int id = Integer.parseInt(idInput.getText());
+            String name = nameInput.getText();
+            String value = valueInput.getText();
+
+            dataManagementService.addEntry(new DataEntry(id, name, value));
+            resultOutput.setText("Entry added successfully.");
+        } catch (Exception e) {
+            resultOutput.setText("Error adding entry: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void updateDataEntry() {
+        try {
+            int id = Integer.parseInt(idInput.getText());
+            String name = nameInput.getText();
+            String value = valueInput.getText();
+
+            dataManagementService.updateEntry(id, name, value);
+            resultOutput.setText("Entry updated successfully.");
+        } catch (Exception e) {
+            resultOutput.setText("Error updating entry: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void deleteDataEntry() {
+        try {
+            int id = Integer.parseInt(idInput.getText());
+
+            dataManagementService.deleteEntry(id);
+            resultOutput.setText("Entry deleted successfully.");
+        } catch (Exception e) {
+            resultOutput.setText("Error deleting entry: " + e.getMessage());
         }
     }
 
