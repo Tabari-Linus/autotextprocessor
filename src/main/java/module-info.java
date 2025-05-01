@@ -1,6 +1,7 @@
 module lii.autotexttprocessor {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.logging;
     requires javafx.web;
 
     requires org.controlsfx.controls;
