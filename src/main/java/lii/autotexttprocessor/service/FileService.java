@@ -1,6 +1,7 @@
 package lii.autotexttprocessor.service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -18,7 +19,7 @@ public class FileService {
     }
 
     public void writeFile(String filePath, String content) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filePath))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filePath), StandardCharsets.UTF_8)) {
             writer.write(content);
         }
     }
