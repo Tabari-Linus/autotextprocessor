@@ -36,6 +36,7 @@ public class MainController {
         String result = regexService.searchAndReplace(inputText, regex, "[REPLACED]");
         resultOutput.setText(result);
     }
+4
 
     @FXML
     public void loadFile() {
