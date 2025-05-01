@@ -1,14 +1,25 @@
 package lii.autotexttprocessor.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import lii.autotexttprocessor.service.RegexService;
 
 public class MainController {
     @FXML
-    private Label welcomeText;
+    private TextField regexInput;
+    @FXML
+    private TextArea textInput;
+    @FXML
+    private TextArea resultOutput;
+
+    private final RegexService regexService = new RegexService();
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    public void processText() {
+        String regex = regexInput.getText();
+        String inputText = textInput.getText();
+        String result = regexService.searchAndReplace(inputText, regex, "[REPLACED]");
+        resultOutput.setText(result);
     }
 }
