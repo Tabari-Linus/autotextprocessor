@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.service.RegexService;
 import lii.autotexttprocessor.service.DataProcessingService;
+import lii.autotexttprocessor.util.LoggerUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +37,16 @@ public class MainController {
 
     @FXML
     public void processText() {
-        String regex = regexInput.getText();
-        String inputText = textInput.getText();
-        String result = regexService.searchAndReplace(inputText, regex, "[REPLACED]");
-        resultOutput.setText(result);
+        try {
+            String regex = regexInput.getText();
+            String inputText = textInput.getText();
+            String result = regexService.searchAndReplace(inputText, regex, "[REPLACED]");
+            resultOutput.setText(result);
+            LoggerUtil.logInfo("Processed text with regex: " + regex);
+        } catch (Exception e) {
+            LoggerUtil.logError("Error processing text", e);
+            resultOutput.setText("Error processing text: " + e.getMessage());
+        }
     }
 
 
@@ -52,7 +59,9 @@ public class MainController {
             try {
                 String content = fileService.readFile(file.getAbsolutePath());
                 textInput.setText(content);
+                LoggerUtil.logInfo("Loaded file: " + file.getAbsolutePath());
             } catch (IOException e) {
+                LoggerUtil.logError("Error reading file", e);
                 resultOutput.setText("Error reading file: " + e.getMessage());
             }
         }
@@ -66,7 +75,9 @@ public class MainController {
         if (file != null) {
             try {
                 fileService.writeFile(file.getAbsolutePath(), resultOutput.getText());
+                LoggerUtil.logInfo("Saved file: " + file.getAbsolutePath());
             } catch (IOException e) {
+                LoggerUtil.logError("Error saving file", e);
                 resultOutput.setText("Error saving file: " + e.getMessage());
             }
         }
@@ -86,7 +97,9 @@ public class MainController {
             try {
                 fileService.processFiles(filePaths, regex, replacement);
                 resultOutput.setText("Batch processing completed successfully.");
+                LoggerUtil.logInfo("Batch processed files: " + filePaths);
             } catch (IOException e) {
+                LoggerUtil.logError("Error during batch processing", e);
                 resultOutput.setText("Error during batch processing: " + e.getMessage());
             }
         }
@@ -94,18 +107,30 @@ public class MainController {
 
     @FXML
     public void analyzeWordFrequency() {
-        String inputText = textInput.getText();
-        Map<String, Long> wordFrequency = dataProcessingService.analyzeWordFrequency(inputText);
-        StringBuilder result = new StringBuilder("Word Frequency Analysis:\n");
-        wordFrequency.forEach((word, count) -> result.append(word).append(": ").append(count).append("\n"));
-        resultOutput.setText(result.toString());
+        try {
+            String inputText = textInput.getText();
+            Map<String, Long> wordFrequency = dataProcessingService.analyzeWordFrequency(inputText);
+            StringBuilder result = new StringBuilder("Word Frequency Analysis:\n");
+            wordFrequency.forEach((word, count) -> result.append(word).append(": ").append(count).append("\n"));
+            resultOutput.setText(result.toString());
+            LoggerUtil.logInfo("Performed word frequency analysis");
+        } catch (Exception e) {
+            LoggerUtil.logError("Error analyzing word frequency", e);
+            resultOutput.setText("Error analyzing word frequency: " + e.getMessage());
+        }
     }
 
     @FXML
     public void summarizeText() {
-        String inputText = textInput.getText();
-        String summary = dataProcessingService.summarizeText(inputText, 50); // Limit to 50 words
-        resultOutput.setText("Text Summary:\n" + summary);
+        try {
+            String inputText = textInput.getText();
+            String summary = dataProcessingService.summarizeText(inputText, 50); // Limit to 50 words
+            resultOutput.setText("Text Summary:\n" + summary);
+            LoggerUtil.logInfo("Summarized text");
+        } catch (Exception e) {
+            LoggerUtil.logError("Error summarizing text", e);
+            resultOutput.setText("Error summarizing text: " + e.getMessage());
+        }
     }
 
 }
