@@ -4,8 +4,17 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class FileService {
+
+    public void processFiles(List<String> filePaths, String regex, String replacement) throws IOException {
+        for (String filePath : filePaths) {
+            String content = readFile(filePath);
+            String updatedContent = content.replaceAll(regex, replacement);
+            writeFile(filePath, updatedContent);
+        }
+    }
 
     public String readFile(String filePath) throws IOException {
         StringBuilder content = new StringBuilder();
