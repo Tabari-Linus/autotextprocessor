@@ -5,7 +5,7 @@
 
 <VBox spacing="10"  xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="lii.autotexttprocessor.controller.DataEntryController">
+      fx:controller="lii.autotexttprocessor.controller.DataManagementController">
 
     <HBox spacing="10">
         <TextField fx:id="idField" promptText="ID" prefWidth="80"/>

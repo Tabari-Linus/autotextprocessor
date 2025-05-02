@@ -22,6 +22,9 @@ public class LoggerUtil {
     public static void logError(String message, Throwable throwable) {
         logger.log(Level.SEVERE, message);
     }
+    public static void logError(String message) {
+        logger.log(Level.SEVERE, message);
+    }
 
 
     public static void logInfo(String message) {
@@ -34,5 +37,9 @@ public class LoggerUtil {
 
     public static void logWarning(String message) {
         logger.log(Level.WARNING, message);
+    }
+
+    public static void logError(String errorStartingApplication, String message) {
+        logger.log(Level.SEVERE, errorStartingApplication + ": " + message);
     }
 }
