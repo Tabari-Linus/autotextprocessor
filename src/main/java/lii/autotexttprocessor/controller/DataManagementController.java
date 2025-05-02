@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import lii.autotexttprocessor.model.DataEntry;
 import lii.autotexttprocessor.service.DataManagementService;
 import lii.autotexttprocessor.util.LoggerUtil;
@@ -28,6 +29,15 @@ public class DataManagementController {
 
     private DataManagementService dataService = new DataManagementService();
     private ObservableList<DataEntry> dataEntries = FXCollections.observableArrayList();
+    private Stage primaryStage;
+
+    public DataManagementController(TabPane tabPane) {
+        tabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                this.primaryStage = (Stage) newScene.getWindow();
+            }
+        });
+    }
 
     public VBox getView() {
         if (mainContainer == null) {
