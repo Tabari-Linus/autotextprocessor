@@ -7,9 +7,13 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.service.DataProcessingService;
 import lii.autotexttprocessor.util.LoggerUtil;
 
+import java.io.File;
 import java.util.Map;
 
 public class TextAnalysisController {
@@ -23,8 +27,19 @@ public class TextAnalysisController {
     @FXML private Label charCountLabel;
     @FXML private ListView<String> sentencesListView;
     @FXML private VBox mainContainer;
+    @FXML private Button loadFileBtn;
 
+    private FileService fileService = new FileService();
+    private Stage primaryStage;
     private DataProcessingService dataProcessingService = new DataProcessingService();
+
+    public TextAnalysisController(TabPane tabPane) {
+        tabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                this.primaryStage = (Stage) newScene.getWindow();
+            }
+        });
+    }
 
     public VBox getView() {
         if (mainContainer == null) {
@@ -60,14 +75,32 @@ public class TextAnalysisController {
 
         sentencesListView = new ListView<>();
 
+        loadFileBtn = new Button("Load from File");
         // Layout
         mainContainer = new VBox(15,
                 new Label("Input Text:"), inputTextArea,
+                loadFileBtn,
                 analyzeBtn,
                 new Label("Word Frequency:"), frequencyTable,
                 statsBox,
                 new Label("Sentences:"), sentencesListView
         );
+
+        loadFileBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Text File");
+            File file = fileChooser.showOpenDialog(primaryStage);
+
+            if (file != null) {
+                try {
+                    String content = fileService.readFile(file.getAbsolutePath());
+                    inputTextArea.setText(content);
+                } catch (Exception ex) {
+                    showErrorAlert("File Error", "Could not load file: " + ex.getMessage());
+                }
+            }
+        });
+
         mainContainer.setPadding(new Insets(15));
 
         // Event handlers
