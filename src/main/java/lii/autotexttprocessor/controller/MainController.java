@@ -149,7 +149,7 @@ public class MainController {
             String regex = regexInput.getText();
             String inputText = textInput.getText();
 
-            if (!RegexUtil.isValidRegex(regex)) {
+            if (!RegexUtil.isValidRegexPattern(regex)) {
                 resultOutput.setText("Invalid regex pattern.");
                 return;
             }
@@ -174,7 +174,7 @@ public class MainController {
             String inputText = textInput.getText();
             String replacement = "[REPLACED]";
 
-            if (!RegexUtil.isValidRegex(regex)) {
+            if (!RegexUtil.isValidRegexPattern(regex)) {
                 resultOutput.setText("Invalid regex pattern.");
                 return;
             }
