@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="lii.autotexttprocessor.controller.RegexToolController">
+
+    <TextArea fx:id="inputTextArea" promptText="Enter your text here" prefRowCount="6"/>
+    <TextField fx:id="regexField" promptText="Regex pattern"/>
+    <TextField fx:id="replacementField" promptText="Replacement (optional)"/>
+
+    <HBox spacing="10">
+        <Button text="Find Matches" onAction="#handleFindMatches"/>
+        <Button text="Replace" onAction="#handleReplace"/>
+    </HBox>
+
+    <Label text="Results:"/>
+    <ListView fx:id="resultListView" prefHeight="150"/>
+
+</VBox>

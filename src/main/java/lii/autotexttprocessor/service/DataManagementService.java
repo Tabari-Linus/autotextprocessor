@@ -2,6 +2,7 @@ package lii.autotexttprocessor.service;
 
 import lii.autotexttprocessor.model.DataEntry;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class DataManagementService {
     private final Map<Integer, DataEntry> dataEntries = new HashMap<>();
+    private final AtomicInteger idCounter = new AtomicInteger(1);
 
     /**
      * Adds a new data entry to the collection.
@@ -81,4 +83,22 @@ public class DataManagementService {
         }
         return new ArrayList<>(dataEntries.values());
     }
+
+    /**
+     * Loads initial data entries for demonstration purposes.
+     *
+     * @return A list of initial DataEntry objects.
+     */
+    public List<DataEntry> loadInitialEntries() {
+        List<DataEntry> initialEntries = new ArrayList<>();
+        initialEntries.add(new DataEntry(1, "Sample Entry 1", "Value 1"));
+        initialEntries.add(new DataEntry(2, "Sample Entry 2", "Value 2"));
+        initialEntries.add(new DataEntry(3, "Sample Entry 3", "Value 3"));
+        return initialEntries;
+    }
+
+    public int getNextId() {
+        return idCounter.getAndIncrement();
+    }
+
 }

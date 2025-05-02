@@ -50,4 +50,12 @@ public class DataEntry {
     public int hashCode() {
         return Objects.hash(id, name, value);
     }
+
+    public String getContent() {
+        return  "Name: " + name + ", Value: " + value;
+    }
+
+    public void setContent(String content) {
+        this.name = name;
+    }
 }
