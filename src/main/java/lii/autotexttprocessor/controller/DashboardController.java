@@ -3,6 +3,8 @@ package lii.autotexttprocessor.controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -10,6 +12,11 @@ import lii.autotexttprocessor.util.LoggerUtil;
 
 public class DashboardController {
     private GridPane mainContainer;
+    private TabPane tabPane;
+
+    public DashboardController(TabPane tabPane) {
+        this.tabPane = tabPane;
+    }
 
     public GridPane getView() {
         if (mainContainer == null) {
@@ -26,11 +33,10 @@ public class DashboardController {
         mainContainer.setAlignment(Pos.CENTER);
 
         // Create dashboard cards
-        VBox regexCard = createDashboardCard("Regex Tools", "Perform powerful pattern matching and text manipulation", "primary");
-        VBox analysisCard = createDashboardCard("Text Analysis", "Analyze text for word frequency, statistics and more", "success");
-        VBox fileCard = createDashboardCard("File Processing", "Batch process multiple files with regex operations", "warning");
-        VBox dataCard = createDashboardCard("Data Management", "Manage your data entries with CRUD operations", "danger");
-
+        VBox regexCard = createDashboardCard("Regex Tools", "Perform powerful pattern matching and text manipulation", "primary", 0);
+        VBox analysisCard = createDashboardCard("Text Analysis", "Analyze text for word frequency, statistics and more", "success", 1);
+        VBox fileCard = createDashboardCard("File Processing", "Batch process multiple files with regex operations", "warning", 2);
+        VBox dataCard = createDashboardCard("Data Management", "Manage your data entries with CRUD operations", "danger", 3);
         // Add cards to grid
         mainContainer.add(regexCard, 0, 0);
         mainContainer.add(analysisCard, 1, 0);
@@ -38,7 +44,7 @@ public class DashboardController {
         mainContainer.add(dataCard, 1, 1);
     }
 
-    private VBox createDashboardCard(String title, String description, String styleClass) {
+    private VBox createDashboardCard(String title, String description, String styleClass, int tabIndex) {
         VBox card = new VBox(10);
         card.setPadding(new Insets(20));
         card.setAlignment(Pos.CENTER);
@@ -76,6 +82,9 @@ public class DashboardController {
             card.setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10;");
         });
 
+        card.setOnMouseClicked((MouseEvent event) -> {
+            tabPane.getSelectionModel().select(tabIndex);
+        });
         return card;
     }
 }
