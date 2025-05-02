@@ -53,6 +53,8 @@ public class MainApp extends Application {
     }
 
     private MenuBar createMenuBar() {
+        LoggerUtil.logInfo("Creating menu bar");
+
         MenuBar menuBar = new MenuBar();
 
         // File Menu
@@ -98,6 +100,8 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
+        LoggerUtil.logInfo("Starting application");
         launch(args);
+        LoggerUtil.logInfo("Application closed");
     }
 }
