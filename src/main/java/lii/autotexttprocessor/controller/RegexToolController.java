@@ -124,6 +124,7 @@ public class RegexToolController {
                     String content = fileService.readFile(file.getAbsolutePath());
                     inputTextArea.setText(content);
                 } catch (Exception ex) {
+                    LoggerUtil.logError("Error loading file", ex);
                     showErrorAlert("File Error", "Could not load file: " + ex.getMessage());
                 }
             }
@@ -187,6 +188,10 @@ public class RegexToolController {
     private void setupEventHandlers() {
         findMatchesBtn.setOnAction(e -> {
             try {
+                if (regexField.getText().isEmpty()) {
+                    showErrorAlert("Regex Error", "Please enter a regex pattern");
+                    return;
+                }
                 List<String> matches = textProcessor.findMatchPattern(
                         inputTextArea.getText(),
                         regexField.getText()
@@ -201,6 +206,14 @@ public class RegexToolController {
 
         replaceBtn.setOnAction(e -> {
             try {
+                if (regexField.getText().isEmpty()) {
+                    showErrorAlert("Regex Error", "Please enter a regex pattern");
+                    return;
+                }
+                if (replacementField.getText().isEmpty()) {
+                    showErrorAlert("Replacement Error", "Please enter a replacement text");
+                    return;
+                }
                 String result = textProcessor.replaceMatches(
                         inputTextArea.getText(),
                         regexField.getText(),
@@ -216,6 +229,10 @@ public class RegexToolController {
 
         validateRegexBtn.setOnAction(e -> {
             try {
+                if (regexField.getText().isEmpty()) {
+                    showErrorAlert("Regex Error", "Please enter a regex pattern");
+                    return;
+                }
                 boolean isValid = textProcessor.findMatchPattern(inputTextArea.getText(), regexField.getText()) != null;
                 showInfoAlert("Regex Validation", isValid ? "Valid regex pattern!" : "Invalid regex pattern!");
             } catch (Exception ex) {
