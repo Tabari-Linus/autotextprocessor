@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * DataManagementService is responsible for managing data entries.
+ * It provides methods to add, update, delete, and retrieve data entries.
+ */
+
 public class DataManagementService {
     private final Map<Integer, DataEntry> dataEntries = new HashMap<>();
 
