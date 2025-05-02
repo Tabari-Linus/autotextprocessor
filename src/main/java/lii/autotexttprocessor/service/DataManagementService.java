@@ -3,13 +3,18 @@ package lii.autotexttprocessor.service;
 import lii.autotexttprocessor.model.DataEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataManagementService {
-    private final List<DataEntry> dataEntries = new ArrayList<>();
+    private final Map<Integer, DataEntry> dataEntries = new HashMap<>();
 
     public void addEntry(DataEntry entry) {
-        dataEntries.add(entry);
+        if (dataEntries.containsKey(entry.getId())) {
+            throw new IllegalArgumentException("Entry with Id " + entry.getId() + " already exists.");
+        }
+        dataEntries.put(entry.getId(), entry);
     }
 
     public void updateEntry(int id, String name, String value) {
