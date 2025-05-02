@@ -114,6 +114,7 @@ public class DataManagementController {
                 dataService.addEntry(entry);
                 loadData();
                 clearForm();
+                LoggerUtil.logInfo("Entry added successfully");
             } catch (Exception ex) {
                 LoggerUtil.logError("Error adding entry", ex);
                 showErrorAlert("Add Error", ex.getMessage());
@@ -128,6 +129,7 @@ public class DataManagementController {
                         valueField.getText()
                 );
                 loadData();
+                LoggerUtil.logInfo("Entry updated successfully");
             } catch (Exception ex) {
                 LoggerUtil.logError("Error updating entry", ex);
                 showErrorAlert("Update Error", ex.getMessage());
@@ -139,6 +141,7 @@ public class DataManagementController {
                 dataService.deleteEntry(Integer.parseInt(idField.getText()));
                 loadData();
                 clearForm();
+                LoggerUtil.logInfo("Entry deleted successfully");
             } catch (Exception ex) {
                 LoggerUtil.logError("Error deleting entry", ex);
                 showErrorAlert("Delete Error", ex.getMessage());
