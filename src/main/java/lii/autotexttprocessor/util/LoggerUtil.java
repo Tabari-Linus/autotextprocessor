@@ -20,7 +20,7 @@ public class LoggerUtil {
     }
 
     public static void logError(String message, Throwable throwable) {
-        logger.log(Level.SEVERE, message);
+        Logger.getLogger(LoggerUtil.class.getName()).log(Level.SEVERE, message, throwable);
     }
     public static void logError(String message) {
         logger.log(Level.SEVERE, message);
