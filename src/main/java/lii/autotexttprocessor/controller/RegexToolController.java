@@ -1,5 +1,6 @@
 package lii.autotexttprocessor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -20,6 +21,9 @@ public class RegexToolController {
     @FXML private ListView<String> matchesListView;
     @FXML private TextArea resultTextArea;
     @FXML private VBox mainContainer;
+    @FXML private ComboBox<String> patternComboBox;
+    @FXML private ToggleButton customPatternToggle;
+    @FXML private TextField customPatternField;
 
     private TextProcessor textProcessor = new TextProcessor();
 
@@ -50,8 +54,26 @@ public class RegexToolController {
         resultTextArea.setEditable(false);
 
         // Layout
+        patternComboBox = new ComboBox<>();
+        patternComboBox.setPromptText("Select common pattern");
+        patternComboBox.setItems(FXCollections.observableArrayList(
+                "Email", "Date", "Time", "Phone Number", "URL", "IP Address"
+        ));
+
+        customPatternToggle = new ToggleButton("Custom");
+        customPatternField = new TextField();
+        customPatternField.setPromptText("Enter custom pattern");
+        customPatternField.setDisable(true);
+
+        HBox patternSelectionBox = new HBox(10,
+                patternComboBox,
+                customPatternToggle,
+                customPatternField
+        );
+
         VBox regexControls = new VBox(10,
-                new Label("Regex Pattern:"), regexField,
+                new Label("Regex Pattern:"),
+                patternSelectionBox,
                 new Label("Replacement Text:"), replacementField,
                 new HBox(10, findMatchesBtn, replaceBtn, validateRegexBtn)
         );
@@ -64,8 +86,43 @@ public class RegexToolController {
         );
         mainContainer.setPadding(new Insets(15));
 
+        setupPatternSelectionHandlers();
         // Event handlers
         setupEventHandlers();
+
+    }
+
+    private void setupPatternSelectionHandlers() {
+        // Toggle between predefined and custom patterns
+        customPatternToggle.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            patternComboBox.setDisable(newVal);
+            customPatternField.setDisable(!newVal);
+            if (newVal) {
+                regexField.setText(customPatternField.getText());
+            }
+        });
+
+        patternComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && !customPatternToggle.isSelected()) {
+                String pattern = switch (newVal) {
+                    case "Email" -> "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b";
+                    case "Date" -> "\\b\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}\\b";
+                    case "Time" -> "\\b\\d{1,2}:\\d{2}(:\\d{2})?\\b";
+                    case "Phone Number" -> "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b";
+                    case "URL" -> "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
+                    case "IP Address" -> "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b";
+                    default -> "";
+                };
+                regexField.setText(pattern);
+            }
+        });
+
+        // Sync custom pattern field with regex field
+        customPatternField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (customPatternToggle.isSelected()) {
+                regexField.setText(newVal);
+            }
+        });
     }
 
     private void setupEventHandlers() {
