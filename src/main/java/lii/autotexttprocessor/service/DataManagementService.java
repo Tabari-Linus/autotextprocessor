@@ -36,6 +36,9 @@ public class DataManagementService {
     }
 
     public List<DataEntry> getAllEntries() {
-        return new ArrayList<>(dataEntries);
+        if (dataEntries.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(dataEntries.values());
     }
 }
