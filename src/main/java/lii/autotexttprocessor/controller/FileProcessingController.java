@@ -21,6 +21,7 @@ public class FileProcessingController {
     @FXML private TextField replacementField;
     @FXML private Button addFileBtn;
     @FXML private Button processFilesBtn;
+    @FXML private Button clearFilesBtn;
     @FXML private ListView<String> filesListView;
     @FXML private TextArea logTextArea;
     @FXML private VBox mainContainer;
@@ -56,6 +57,8 @@ public class FileProcessingController {
 
         addFileBtn = new Button("Add Files");
         processFilesBtn = new Button("Process Files");
+        clearFilesBtn = new Button("Clear Files");
+
 
         filesListView = new ListView<>();
         logTextArea = new TextArea();
@@ -78,12 +81,14 @@ public class FileProcessingController {
                 customPatternField
         );
 
+        HBox fileButtons = new HBox(10, addFileBtn, processFilesBtn, clearFilesBtn);
+
         // Replace the simple regexField with the new pattern selection
         VBox regexControls = new VBox(10,
                 new Label("Regex Pattern:"),
                 patternSelectionBox,
                 new Label("Replacement Text:"), replacementField,
-                new HBox(10, addFileBtn, processFilesBtn)
+                fileButtons
         );
 
         mainContainer = new VBox(15,
@@ -96,6 +101,7 @@ public class FileProcessingController {
         // Event handlers
         setupPatternSelectionHandlers();
         setupEventHandlers();
+        setupClearFilesHandler();
     }
 
     private void setupEventHandlers() {
@@ -121,6 +127,12 @@ public class FileProcessingController {
                 return;
             }
 
+            if (replacementField.getText().isEmpty()) {
+                showErrorAlert("No Replacement", "Please enter a replacement text");
+                LoggerUtil.logInfo( "No Replacement Text");
+                return;
+            }
+
             try {
                 List<String> filePaths = selectedFiles.stream()
                         .map(File::getAbsolutePath)
@@ -128,11 +140,21 @@ public class FileProcessingController {
 
                 fileService.processFiles(filePaths, regexField.getText(), replacementField.getText());
                 logTextArea.appendText("Successfully processed " + selectedFiles.size() + " files\n");
+                LoggerUtil.logInfo( "Successfully processed " + selectedFiles.size() + " files");
 
             } catch (IOException ex) {
                 LoggerUtil.logError("Error processing files", ex);
                 logTextArea.appendText("Error processing files: " + ex.getMessage() + "\n");
             }
+        });
+    }
+
+    private void setupClearFilesHandler() {
+        clearFilesBtn.setOnAction(e -> {
+            selectedFiles.clear();
+            updateFilesListView();
+            logTextArea.appendText("Cleared selected files\n");
+            LoggerUtil.logInfo("Cleared selected files");
         });
     }
 
