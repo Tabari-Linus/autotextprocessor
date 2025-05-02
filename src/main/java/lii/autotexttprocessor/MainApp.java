@@ -44,7 +44,7 @@ public class MainApp extends Application {
 
             primaryStage.setTitle(APP_TITLE);
             primaryStage.setScene(scene);
-//            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app-icon.png")));
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icons-company.png")));
             primaryStage.show();
 
         } catch (Exception e) {
