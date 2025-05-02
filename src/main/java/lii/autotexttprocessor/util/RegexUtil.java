@@ -35,4 +35,19 @@ public class RegexUtil {
             return false;
         }
     }
+
+    // Method to provide match information as a Map of match and paired to its index
+    public static List<String> getMatchInfo(String text, String regex) {
+        List<String> matchInfo = new ArrayList<>();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            matchInfo.add("Match: " + matcher.group() + ", Start: " + matcher.start() + ", End: " + matcher.end());
+        }
+        return matchInfo;
+    }
+
+
+
+
 }
