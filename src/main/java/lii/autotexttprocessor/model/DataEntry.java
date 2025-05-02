@@ -13,6 +13,7 @@ public class DataEntry {
         this.value = value;
     }
 
+    // Getter and Setter for id
     public int getId() {
         return id;
     }
@@ -38,6 +39,7 @@ public class DataEntry {
         this.value = value;
     }
 
+    // Override toString method for better representation
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,6 +48,7 @@ public class DataEntry {
         return id == dataEntry.id && Objects.equals(name, dataEntry.name) && Objects.equals(value, dataEntry.value);
     }
 
+    // Override hashCode method for proper hashing
     @Override
     public int hashCode() {
         return Objects.hash(id, name, value);
