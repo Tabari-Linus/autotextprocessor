@@ -1,5 +1,6 @@
 package lii.autotexttprocessor.util;
 
+import java.io.IOException;
 import java.util.logging.*;
 
 public class LoggerUtil {
@@ -7,14 +8,24 @@ public class LoggerUtil {
 
     static {
         try {
-            // Set up the logger
-            LogManager.getLogManager().reset();
+            // Create a FileHandler to log to a file
+            FileHandler fileHandler = new FileHandler("applicationActivities.log", true); // Append mode
+            fileHandler.setFormatter(new SimpleFormatter()); // Use a simple text format
+            logger.addHandler(fileHandler);
+
+            // Set the logging level
             logger.setLevel(Level.ALL);
-            ConsoleHandler consoleHandler = new ConsoleHandler();;
-            consoleHandler.setLevel(Level.ALL);
-            logger.addHandler(consoleHandler);
-        } catch (SecurityException e) {
-            e.printStackTrace();
+
+            // Optional: Remove default console handler
+            Logger rootLogger = Logger.getLogger("");
+            Handler[] handlers = rootLogger.getHandlers();
+            for (Handler handler : handlers) {
+                if (handler instanceof ConsoleHandler) {
+                    rootLogger.removeHandler(handler);
+                }
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to initialize logger", e);
         }
 
     }
