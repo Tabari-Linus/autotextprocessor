@@ -18,13 +18,13 @@ public class DataManagementService {
     }
 
     public void updateEntry(int id, String name, String value) {
-        for (DataEntry entry : dataEntries) {
-            if (entry.getId() == id) {
-                entry.setName(name);
-                entry.setValue(value);
-                return;
-            }
+        DataEntry entry = dataEntries.get(id);
+        if (entry == null) {
+            throw new IllegalArgumentException("Entry with Id " + id + " does not exist.");
         }
+        entry.setName(name);
+        entry.setValue(value);
+        dataEntries.put(id, entry);
     }
 
     public void deleteEntry(int id) {
