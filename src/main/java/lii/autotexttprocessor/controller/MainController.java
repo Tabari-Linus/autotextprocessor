@@ -134,7 +134,7 @@ public class MainController {
     public void summarizeText() {
         try {
             String inputText = textInput.getText();
-            String summary = dataProcessingService.summarizeText(inputText, 50); // Limit to 50 words
+            Map summary = dataProcessingService.summarizeText(inputText); // Limit to 50 words
             resultOutput.setText("Text Summary:\n" + summary);
             LoggerUtil.logInfo("Summarized text");
         } catch (Exception e) {
