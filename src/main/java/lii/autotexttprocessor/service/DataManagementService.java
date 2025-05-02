@@ -28,7 +28,11 @@ public class DataManagementService {
     }
 
     public void deleteEntry(int id) {
-        dataEntries.removeIf(entry -> entry.getId() == id);
+        DataEntry entry = dataEntries.get(id);
+        if (entry == null) {
+            throw new IllegalArgumentException("Entry with Id " + id + " does not exist.");
+        }
+        dataEntries.remove(id);
     }
 
     public List<DataEntry> getAllEntries() {
