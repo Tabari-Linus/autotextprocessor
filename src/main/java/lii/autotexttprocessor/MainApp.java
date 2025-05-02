@@ -29,11 +29,11 @@ public class MainApp extends Application {
             tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
             // Add tabs - Dashboard first
-            Tab dashboardTab = new Tab("Dashboard", new DashboardController().getView());
-            Tab regexTab = new Tab("Regex Tools", new RegexToolController().getView());
-            Tab textAnalysisTab = new Tab("Text Analysis", new TextAnalysisController().getView());
-            Tab fileProcessingTab = new Tab("File Processing", new FileProcessingController().getView());
-            Tab dataManagementTab = new Tab("Data Management", new DataManagementController().getView());
+            Tab dashboardTab = new Tab("Dashboard", new DashboardController(tabPane).getView());
+            Tab regexTab = new Tab("Regex Tools", new RegexToolController(tabPane).getView());
+            Tab textAnalysisTab = new Tab("Text Analysis", new TextAnalysisController(tabPane).getView());
+            Tab fileProcessingTab = new Tab("File Processing", new FileProcessingController(tabPane).getView());
+            Tab dataManagementTab = new Tab("Data Management", new DataManagementController(tabPane).getView());
 
             tabPane.getTabs().addAll(dashboardTab, regexTab, textAnalysisTab, fileProcessingTab, dataManagementTab);
             root.setCenter(tabPane);
