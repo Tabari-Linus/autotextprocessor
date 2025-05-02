@@ -1,231 +1,221 @@
 package lii.autotexttprocessor.controller;
 
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import lii.autotexttprocessor.model.DataEntry;
-import lii.autotexttprocessor.service.FileService;
-import lii.autotexttprocessor.service.RegexService;
-import lii.autotexttprocessor.service.DataProcessingService;
 import lii.autotexttprocessor.service.DataManagementService;
-import lii.autotexttprocessor.util.LoggerUtil;
+import lii.autotexttprocessor.service.FileService;
+import lii.autotexttprocessor.model.DataEntry;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 import lii.autotexttprocessor.util.RegexUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MainController {
 
-    @FXML
-    private TextField regexInput;
-    @FXML
-    private TextArea textInput;
-    @FXML
-    private TextArea resultOutput;
-    @FXML
-    private TextField idInput;
-    @FXML
-    private TextField nameInput;
-    @FXML
-    private TextField valueInput;
+    @FXML private ComboBox<String> regexPatternComboBox;
+    @FXML private TextField customRegexField;
+    @FXML private TextArea regexInputArea;
+    @FXML private ListView<String> regexMatchList;
+    @FXML private TableView<DataEntry> dataEntryTable;
+    @FXML private TableColumn<DataEntry, String> columnId;
+    @FXML private TableColumn<DataEntry, String> columnContent;
+    @FXML private TableColumn<DataEntry, String> columnActions;
 
-    private final RegexService regexService = new RegexService();
     private final FileService fileService = new FileService();
-    private final DataProcessingService dataProcessingService = new DataProcessingService();
-    private final DataManagementService dataManagementService = new DataManagementService();
+    private final DataManagementService dataService = new DataManagementService();
 
-    private Stage stage;
+    @FXML
+    public void initialize() {
+        setupRegexTab();
+        setupDataEntryTab();
+    }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    private void setupRegexTab() {
+        regexPatternComboBox.getItems().addAll("Email", "Date", "Time", "Number", "Custom");
+        regexPatternComboBox.getSelectionModel().selectFirst();
+        regexPatternComboBox.setOnAction(e -> toggleCustomRegexField());
+    }
+
+    private void setupDataEntryTab() {
+        columnId.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.getValue().getId())));
+        columnContent.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getContent()));
+        columnActions.setCellFactory(getActionCellFactory());
+
+        refreshDataTable();
+        setupTableContextMenu();
+    }
+
+    private void toggleCustomRegexField() {
+        customRegexField.setVisible("Custom".equals(regexPatternComboBox.getValue()));
     }
 
     @FXML
-    public void processText() {
-        try {
-            String regex = regexInput.getText();
-            String inputText = textInput.getText();
-            String result = regexService.searchAndReplace(inputText, regex, "[REPLACED]");
-            resultOutput.setText(result);
-            LoggerUtil.logInfo("Processed text with regex: " + regex);
-        } catch (Exception e) {
-            LoggerUtil.logError("Error processing text", e);
-            resultOutput.setText("Error processing text: " + e.getMessage());
+    private void handleRegexExecute() {
+        String pattern = regexPatternComboBox.getValue();
+        String inputText = regexInputArea.getText();
+
+        if (inputText.isEmpty()) {
+            showAlert("Error", "No Input", "Please enter text to process");
+            return;
+        }
+
+        String regex = switch (pattern) {
+            case "Email" -> "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b";
+            case "Date" -> "\\b\\d{4}-\\d{2}-\\d{2}\\b";
+            case "Time" -> "\\b\\d{2}:\\d{2}(:\\d{2})?\\b";
+            case "Number" -> "\\b\\d+(\\.\\d+)?\\b";
+            case "Custom" -> {
+                if (customRegexField.getText().isEmpty()) {
+                    showAlert("Error", "Missing Pattern", "Please enter a custom regular expression");
+                    yield "";
+                }
+                yield customRegexField.getText();
+            }
+            default -> "";
+        };
+
+        if (!regex.isEmpty()) {
+            List<String> matches = RegexUtil.findMatches(inputText, regex);
+            regexMatchList.setItems(FXCollections.observableArrayList(matches));
         }
     }
 
-
     @FXML
-    public void loadFile() {
+    private void handleOpenFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Text File");
-        File file = fileChooser.showOpenDialog(stage);
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showOpenDialog(null);
+
         if (file != null) {
             try {
                 String content = fileService.readFile(file.getAbsolutePath());
-                textInput.setText(content);
-                LoggerUtil.logInfo("Loaded file: " + file.getAbsolutePath());
+                regexInputArea.setText(content);
             } catch (IOException e) {
-                LoggerUtil.logError("Error reading file", e);
-                resultOutput.setText("Error reading file: " + e.getMessage());
+                showAlert("Error", "File Error", "Could not open file: " + e.getMessage());
             }
         }
     }
 
     @FXML
-    public void saveFile() {
+    private void handleSaveFile() {
+        if (regexInputArea.getText().isEmpty()) {
+            showAlert("Error", "No Content", "There is no text to save");
+            return;
+        }
+
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Processed File");
-        File file = fileChooser.showSaveDialog(stage);
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showSaveDialog(null);
+
         if (file != null) {
             try {
-                fileService.writeFile(file.getAbsolutePath(), resultOutput.getText());
-                LoggerUtil.logInfo("Saved file: " + file.getAbsolutePath());
+                fileService.writeFile(file.getAbsolutePath(), regexInputArea.getText());
+                showAlert("Success", "File Saved", "Content saved successfully");
             } catch (IOException e) {
-                LoggerUtil.logError("Error saving file", e);
-                resultOutput.setText("Error saving file: " + e.getMessage());
-            }
-        }
-    }
-
-    public void processBatchFiles() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Files for Batch Processing");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        List<File> files = fileChooser.showOpenMultipleDialog(stage);
-
-        if (files != null && !files.isEmpty()) {
-            List<String> filePaths = files.stream().map(File::getAbsolutePath).collect(Collectors.toList());
-            String regex = regexInput.getText();
-            String replacement = "[REPLACED]";
-
-            try {
-                fileService.processFiles(filePaths, regex, replacement);
-                resultOutput.setText("Batch processing completed successfully.");
-                LoggerUtil.logInfo("Batch processed files: " + filePaths);
-            } catch (IOException e) {
-                LoggerUtil.logError("Error during batch processing", e);
-                resultOutput.setText("Error during batch processing: " + e.getMessage());
+                showAlert("Error", "File Error", "Could not save file: " + e.getMessage());
             }
         }
     }
 
     @FXML
-    public void analyzeWordFrequency() {
-        try {
-            String inputText = textInput.getText();
-            Map<String, Long> wordFrequency = dataProcessingService.wordFrequency(inputText);
-            StringBuilder result = new StringBuilder("Word Frequency Analysis:\n");
-            wordFrequency.forEach((word, count) -> result.append(word).append(": ").append(count).append("\n"));
-            resultOutput.setText(result.toString());
-            LoggerUtil.logInfo("Performed word frequency analysis");
-        } catch (Exception e) {
-            LoggerUtil.logError("Error analyzing word frequency", e);
-            resultOutput.setText("Error analyzing word frequency: " + e.getMessage());
-        }
+    private void handleLoadData() {
+        refreshDataTable();
     }
 
     @FXML
-    public void summarizeText() {
-        try {
-            String inputText = textInput.getText();
-            Map summary = dataProcessingService.summarizeText(inputText); // Limit to 50 words
-            resultOutput.setText("Text Summary:\n" + summary);
-            LoggerUtil.logInfo("Summarized text");
-        } catch (Exception e) {
-            LoggerUtil.logError("Error summarizing text", e);
-            resultOutput.setText("Error summarizing text: " + e.getMessage());
-        }
+    private void handleExit() {
+        System.exit(0);
     }
 
     @FXML
-    public void findMatches() {
-        try {
-            String regex = regexInput.getText();
-            String inputText = textInput.getText();
+    private void handleAddEntry() {
+        DataEntry newEntry = new DataEntry(
+                dataService.getNextId(),
+                "New Entry",
+                "Sample content");
+        dataService.addEntry(newEntry);
+        refreshDataTable();
+    }
 
-            if (!RegexUtil.isValidRegexPattern(regex)) {
-                resultOutput.setText("Invalid regex pattern.");
-                return;
+    private void refreshDataTable() {
+        dataEntryTable.setItems(FXCollections.observableArrayList(dataService.getAllEntries()));
+    }
+
+    private void setupTableContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.setOnAction(this::handleDeleteEntry);
+        contextMenu.getItems().add(deleteItem);
+        dataEntryTable.setContextMenu(contextMenu);
+    }
+
+    private void handleDeleteEntry(ActionEvent event) {
+        DataEntry selected = dataEntryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            dataService.deleteEntry(selected.getId());
+            refreshDataTable();
+        } else {
+            showAlert("Error", "No Selection", "Please select an entry to delete");
+        }
+    }
+
+    private Callback<TableColumn<DataEntry, String>, TableCell<DataEntry, String>> getActionCellFactory() {
+        return param -> new TableCell<>() {
+            private final Button editBtn = new Button("Edit");
+            private final Button deleteBtn = new Button("Delete");
+            private final HBox actionBox = new HBox(5, editBtn, deleteBtn);
+
+            {
+                editBtn.setOnAction(e -> handleEditAction());
+                deleteBtn.setOnAction(e -> handleDeleteAction());
             }
 
-            List<String> matches = RegexUtil.findMatches(inputText, regex);
-            if (matches.isEmpty()) {
-                resultOutput.setText("No matches found.");
-            } else {
-                resultOutput.setText("Matches:\n" + String.join("\n", matches));
-            }
-            LoggerUtil.logInfo("Performed regex search with pattern: " + regex);
-        } catch (Exception e) {
-            LoggerUtil.logError("Error finding matches", e);
-            resultOutput.setText("Error finding matches: " + e.getMessage());
-        }
-    }
+            private void handleEditAction() {
+                DataEntry entry = getTableView().getItems().get(getIndex());
+                TextInputDialog dialog = new TextInputDialog(entry.getContent());
+                dialog.setTitle("Edit Entry");
+                dialog.setHeaderText("Edit entry content:");
+                dialog.setContentText("Content:");
 
-    @FXML
-    public void replaceMatches() {
-        try {
-            String regex = regexInput.getText();
-            String inputText = textInput.getText();
-            String replacement = "[REPLACED]";
-
-            if (!RegexUtil.isValidRegexPattern(regex)) {
-                resultOutput.setText("Invalid regex pattern.");
-                return;
+                dialog.showAndWait().ifPresent(newContent -> {
+                    entry.setContent(newContent);
+                    dataService.updateEntry(entry.getId(),entry.getName(), newContent);
+                    refreshDataTable();
+                });
             }
 
-            String replacedText = RegexUtil.replaceMatches(inputText, regex, replacement);
-            resultOutput.setText("Replaced Text:\n" + replacedText);
-            LoggerUtil.logInfo("Performed regex replace with pattern: " + regex);
-        } catch (Exception e) {
-            LoggerUtil.logError("Error replacing matches", e);
-            resultOutput.setText("Error replacing matches: " + e.getMessage());
-        }
+            private void handleDeleteAction() {
+                DataEntry entry = getTableView().getItems().get(getIndex());
+                dataService.deleteEntry(entry.getId());
+                refreshDataTable();
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : actionBox);
+            }
+        };
     }
 
-    @FXML
-    public void addDataEntry() {
-        try {
-            int id = Integer.parseInt(idInput.getText());
-            String name = nameInput.getText();
-            String value = valueInput.getText();
-
-            dataManagementService.addEntry(new DataEntry(id, name, value));
-            resultOutput.setText("Entry added successfully.");
-        } catch (Exception e) {
-            resultOutput.setText("Error adding entry: " + e.getMessage());
-        }
+    private void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
-
-    @FXML
-    public void updateDataEntry() {
-        try {
-            int id = Integer.parseInt(idInput.getText());
-            String name = nameInput.getText();
-            String value = valueInput.getText();
-
-            dataManagementService.updateEntry(id, name, value);
-            resultOutput.setText("Entry updated successfully.");
-        } catch (Exception e) {
-            resultOutput.setText("Error updating entry: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    public void deleteDataEntry() {
-        try {
-            int id = Integer.parseInt(idInput.getText());
-
-            dataManagementService.deleteEntry(id);
-            resultOutput.setText("Entry deleted successfully.");
-        } catch (Exception e) {
-            resultOutput.setText("Error deleting entry: " + e.getMessage());
-        }
-    }
-
 }

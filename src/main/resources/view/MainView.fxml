@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="lii.autotexttprocessor.controller.MainController">
+
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Open File" onAction="#handleOpenFile"/>
+                <MenuItem text="Save File" onAction="#handleSaveFile"/>
+                <MenuItem text="Load Data" onAction="#handleLoadData"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit" onAction="#handleExit"/>
+            </Menu>
+            <Menu text="Edit">
+                <MenuItem text="Add Entry" onAction="#handleAddEntry"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <TabPane fx:id="mainTabPane">
+            <Tab text="Regex Operations">
+                <VBox spacing="10" >
+                    <HBox spacing="10">
+                        <Label text="Select Pattern:"/>
+                        <ComboBox fx:id="regexPatternComboBox" prefWidth="150"/>
+                        <TextField fx:id="customRegexField" promptText="Enter custom regex..."
+                                   visible="false" prefWidth="300"/>
+                    </HBox>
+
+                    <Label text="Input Text:"/>
+                    <TextArea fx:id="regexInputArea" prefRowCount="10" wrapText="true"/>
+
+                    <Button text="Execute" onAction="#handleRegexExecute"
+                            style="-fx-font-weight: bold;" defaultButton="true"/>
+
+                    <Label text="Matches:"/>
+                    <ListView fx:id="regexMatchList" prefHeight="150"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="Data Entry">
+                <VBox spacing="10" >
+                    <TableView fx:id="dataEntryTable" prefHeight="400">
+                        <columns>
+                            <TableColumn fx:id="columnId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="columnContent" text="Content" prefWidth="500"/>
+                            <TableColumn fx:id="columnActions" text="Actions" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    <Button text="Add New Entry" onAction="#handleAddEntry"
+                            style="-fx-font-weight: bold;"/>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>

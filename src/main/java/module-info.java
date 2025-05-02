@@ -17,4 +17,6 @@ module lii.autotexttprocessor {
     exports lii.autotexttprocessor.controller;
     opens lii.autotexttprocessor.controller to javafx.fxml;
     opens lii.autotexttprocessor.fxml to javafx.fxml;
+    exports lii.autotexttprocessor.model;
+    exports  lii.autotexttprocessor.service;
 }
