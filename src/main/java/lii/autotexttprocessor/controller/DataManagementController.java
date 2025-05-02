@@ -106,6 +106,18 @@ public class DataManagementController {
 
         addBtn.setOnAction(e -> {
             try {
+                if (idField.getText().isEmpty()) {
+                    showErrorAlert("Id Error", "Please enter an ID");
+                    return;
+                }
+                if (nameField.getText().isEmpty()) {
+                    showErrorAlert("Name Error", "Please enter a name");
+                    return;
+                }
+                if (valueField.getText().isEmpty()) {
+                    showErrorAlert("Value Error", "Please enter a value");
+                    return;
+                }
                 DataEntry entry = new DataEntry(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -123,6 +135,28 @@ public class DataManagementController {
 
         updateBtn.setOnAction(e -> {
             try {
+                if (dataTableView.getSelectionModel().getSelectedItem() == null) {
+                    showErrorAlert("No Selection", "Please select an entry to update");
+                    return;
+                }
+                DataEntry selectedEntry = dataTableView.getSelectionModel().getSelectedItem();
+                if (selectedEntry == null) {
+                    showErrorAlert("No Selection", "Please select an entry to update");
+                    return;
+                }
+                if (idField.getText().isEmpty() ) {
+                    showErrorAlert("Id Error", "Plwase enter an ID");
+                    return;
+                }
+                if (nameField.getText().isEmpty()) {
+                    showErrorAlert("Name Error", "Please enter a name");
+                    return;
+                }
+                if (valueField.getText().isEmpty()) {
+                    showErrorAlert("Value Error", "Please enter a value");
+                    return;
+                }
+
                 dataService.updateEntry(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -138,6 +172,16 @@ public class DataManagementController {
 
         deleteBtn.setOnAction(e -> {
             try {
+                if (dataTableView.getSelectionModel().getSelectedItem() == null) {
+                    showErrorAlert("No Selection", "Please select an entry to delete");
+                    return;
+                }
+                DataEntry selectedEntry = dataTableView.getSelectionModel().getSelectedItem();
+                if (selectedEntry == null || idField.getText().isEmpty() ) {
+                    showErrorAlert("No Selection", "Please select an entry to delete");
+                    return;
+                }
+
                 dataService.deleteEntry(Integer.parseInt(idField.getText()));
                 loadData();
                 clearForm();
