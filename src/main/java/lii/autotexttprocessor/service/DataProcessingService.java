@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class DataProcessingService {
 
-    public Map<String, Long> analyzeWordFrequency(String text) {
+    public Map<String, Long> wordFrequency(String text) {
         return Arrays.stream(text.split("\\W+"))
                 .filter(word -> !word.isEmpty())
                 .map(String::toLowerCase)

@@ -119,7 +119,7 @@ public class MainController {
     public void analyzeWordFrequency() {
         try {
             String inputText = textInput.getText();
-            Map<String, Long> wordFrequency = dataProcessingService.analyzeWordFrequency(inputText);
+            Map<String, Long> wordFrequency = dataProcessingService.wordFrequency(inputText);
             StringBuilder result = new StringBuilder("Word Frequency Analysis:\n");
             wordFrequency.forEach((word, count) -> result.append(word).append(": ").append(count).append("\n"));
             resultOutput.setText(result.toString());
