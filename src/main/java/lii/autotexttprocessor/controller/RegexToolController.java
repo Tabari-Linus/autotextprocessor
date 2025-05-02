@@ -6,9 +6,13 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.model.TextProcessor;
 import lii.autotexttprocessor.util.LoggerUtil;
 
+import java.io.File;
 import java.util.List;
 
 public class RegexToolController {
@@ -17,6 +21,8 @@ public class RegexToolController {
     @FXML private TextField replacementField;
     @FXML private Button findMatchesBtn;
     @FXML private Button replaceBtn;
+    @FXML private Button loadFileBtn;
+    @FXML private Button saveResultsBtn;
     @FXML private Button validateRegexBtn;
     @FXML private ListView<String> matchesListView;
     @FXML private TextArea resultTextArea;
@@ -25,7 +31,18 @@ public class RegexToolController {
     @FXML private ToggleButton customPatternToggle;
     @FXML private TextField customPatternField;
 
+
     private TextProcessor textProcessor = new TextProcessor();
+    private FileService fileService = new FileService();
+    private Stage primaryStage;
+
+    public RegexToolController(TabPane tabPane) {
+        tabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                this.primaryStage = (Stage) newScene.getWindow();
+            }
+        });
+    }
 
     public VBox getView() {
         if (mainContainer == null) {
@@ -70,11 +87,14 @@ public class RegexToolController {
                 customPatternToggle,
                 customPatternField
         );
+        HBox fileButtons = new HBox(10, loadFileBtn = new Button("Load from File"),
+                saveResultsBtn = new Button("Save Results"));
 
         VBox regexControls = new VBox(10,
                 new Label("Regex Pattern:"),
                 patternSelectionBox,
                 new Label("Replacement Text:"), replacementField,
+                fileButtons,
                 new HBox(10, findMatchesBtn, replaceBtn, validateRegexBtn)
         );
 
@@ -88,8 +108,47 @@ public class RegexToolController {
 
         setupPatternSelectionHandlers();
         // Event handlers
+        setupFileHandlers();
         setupEventHandlers();
 
+    }
+
+    private void setupFileHandlers() {
+        loadFileBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Text File");
+            File file = fileChooser.showOpenDialog(primaryStage);
+
+            if (file != null) {
+                try {
+                    String content = fileService.readFile(file.getAbsolutePath());
+                    inputTextArea.setText(content);
+                } catch (Exception ex) {
+                    showErrorAlert("File Error", "Could not load file: " + ex.getMessage());
+                }
+            }
+        });
+
+        saveResultsBtn.setOnAction(e -> {
+            if (resultTextArea.getText().isEmpty()) {
+                showErrorAlert("Save Error", "No results to save");
+                return;
+            }
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Results");
+            fileChooser.setInitialFileName("regex_results.txt");
+            File file = fileChooser.showSaveDialog(primaryStage);
+
+            if (file != null) {
+                try {
+                    fileService.writeFile(file.getAbsolutePath(), resultTextArea.getText());
+                    showInfoAlert("Success", "Results saved successfully");
+                } catch (Exception ex) {
+                    showErrorAlert("Save Error", "Could not save file: " + ex.getMessage());
+                }
+            }
+        });
     }
 
     private void setupPatternSelectionHandlers() {
