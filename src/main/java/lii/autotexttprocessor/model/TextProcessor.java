@@ -13,7 +13,7 @@ public class TextProcessor {
     }
 
     // Method to find all matches of a regex pattern in a given text and return them as a list
-    public List<String> findMatches(String text, String regex) {
+    public List<String> findMatchPattern(String text, String regex) {
         if (!regexUtil.isValidRegexPattern(regex)) {
             throw new IllegalArgumentException("Not a valid regex pattern: " + regex);
         }
