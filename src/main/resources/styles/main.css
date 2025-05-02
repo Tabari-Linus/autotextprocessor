@@ -155,3 +155,31 @@
 .grid-pane {
     -fx-alignment: center;
 }
+
+/* Add these to your existing CSS */
+
+/* Button styles for file operations */
+.button.file-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.button.file-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* ComboBox in File Processing tab */
+.file-processing .combo-box {
+    -fx-pref-width: 200;
+}
+
+/* Dashboard card transition */
+.card {
+    -fx-transition: all 0.3s ease;
+}
+
+/* Text area with file content */
+.text-area-with-file {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2;
+}
