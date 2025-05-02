@@ -15,6 +15,12 @@ import java.util.Map;
 public class DataManagementService {
     private final Map<Integer, DataEntry> dataEntries = new HashMap<>();
 
+    /**
+     * Adds a new data entry to the collection.
+     *
+     * @param entry The DataEntry object to be added.
+     * @throws IllegalArgumentException if an entry with the same ID already exists.
+     */
     public void addEntry(DataEntry entry) {
         if (dataEntries.containsKey(entry.getId())) {
             throw new IllegalArgumentException("Entry with Id " + entry.getId() + " already exists.");
@@ -22,6 +28,14 @@ public class DataManagementService {
         dataEntries.put(entry.getId(), entry);
     }
 
+    /**
+     * Updates an existing data entry.
+     *
+     * @param id    The ID of the entry to be updated.
+     * @param name  The new name for the entry.
+     * @param value The new value for the entry.
+     * @throws IllegalArgumentException if the entry with the specified ID does not exist.
+     */
     public void updateEntry(int id, String name, String value) {
         DataEntry entry = dataEntries.get(id);
         if (entry == null) {
@@ -32,6 +46,12 @@ public class DataManagementService {
         dataEntries.put(id, entry);
     }
 
+    /**
+     * Deletes a data entry from the collection.
+     *
+     * @param id The ID of the entry to be deleted.
+     * @throws IllegalArgumentException if the entry with the specified ID does not exist.
+     */
     public void deleteEntry(int id) {
         DataEntry entry = dataEntries.get(id);
         if (entry == null) {
@@ -40,6 +60,21 @@ public class DataManagementService {
         dataEntries.remove(id);
     }
 
+    /**
+     * Retrieves a data entry by its ID.
+     *
+     * @param id The ID of the entry to be retrieved.
+     * @return The DataEntry object with the specified ID, or null if not found.
+     */
+    public DataEntry getEntryById(int id) {
+        return dataEntries.get(id);
+    }
+
+    /**
+     * Retrieves all data entries.
+     *
+     * @return A list of all DataEntry objects.
+     */
     public List<DataEntry> getAllEntries() {
         if (dataEntries.isEmpty()) {
             return new ArrayList<>();
