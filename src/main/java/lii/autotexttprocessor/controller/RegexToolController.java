@@ -123,6 +123,7 @@ public class RegexToolController {
                 try {
                     String content = fileService.readFile(file.getAbsolutePath());
                     inputTextArea.setText(content);
+                    LoggerUtil.logInfo("File loaded successfully");
                 } catch (Exception ex) {
                     LoggerUtil.logError("Error loading file", ex);
                     showErrorAlert("File Error", "Could not load file: " + ex.getMessage());
@@ -144,6 +145,7 @@ public class RegexToolController {
             if (file != null) {
                 try {
                     fileService.writeFile(file.getAbsolutePath(), resultTextArea.getText());
+                    LoggerUtil.logInfo("File saved successfully");
                     showInfoAlert("Success", "Results saved successfully");
                 } catch (Exception ex) {
                     showErrorAlert("Save Error", "Could not save file: " + ex.getMessage());
@@ -189,6 +191,7 @@ public class RegexToolController {
         findMatchesBtn.setOnAction(e -> {
             try {
                 if (regexField.getText().isEmpty()) {
+                    LoggerUtil.logInfo( "Regex field is empty");
                     showErrorAlert("Regex Error", "Please enter a regex pattern");
                     return;
                 }
@@ -221,6 +224,7 @@ public class RegexToolController {
                 );
                 resultTextArea.setText(result);
                 matchesListView.getItems().clear();
+                LoggerUtil.logInfo("Replacement successful");
             } catch (Exception ex) {
                 showErrorAlert("Regex Error", ex.getMessage());
                 LoggerUtil.logError("Error replacing matches", ex);
