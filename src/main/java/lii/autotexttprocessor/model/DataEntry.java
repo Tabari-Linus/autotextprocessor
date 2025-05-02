@@ -25,6 +25,7 @@ public class DataEntry {
         return name;
     }
 
+    // Setter for name
     public void setName(String name) {
         this.name = name;
     }
