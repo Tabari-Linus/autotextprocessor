@@ -1,11 +1,13 @@
 package lii.autotexttprocessor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lii.autotexttprocessor.service.FileService;
 import lii.autotexttprocessor.util.LoggerUtil;
 
@@ -22,10 +24,21 @@ public class FileProcessingController {
     @FXML private ListView<String> filesListView;
     @FXML private TextArea logTextArea;
     @FXML private VBox mainContainer;
+    @FXML private ComboBox<String> patternComboBox;
+    @FXML private ToggleButton customPatternToggle;
+    @FXML private TextField customPatternField;
 
     private FileService fileService = new FileService();
     private List<File> selectedFiles = new ArrayList<>();
+    private Stage primaryStage;
 
+    public FileProcessingController(TabPane tabPane) {
+        tabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                this.primaryStage = (Stage) newScene.getWindow();
+            }
+        });
+    }
     public VBox getView() {
         if (mainContainer == null) {
             initializeUI();
@@ -48,9 +61,27 @@ public class FileProcessingController {
         logTextArea = new TextArea();
         logTextArea.setEditable(false);
 
-        // Layout
+        patternComboBox = new ComboBox<>();
+        patternComboBox.setPromptText("Select common pattern");
+        patternComboBox.setItems(FXCollections.observableArrayList(
+                "Email", "Date", "Time", "Phone Number", "URL", "IP Address"
+        ));
+
+        customPatternToggle = new ToggleButton("Custom");
+        customPatternField = new TextField();
+        customPatternField.setPromptText("Enter custom pattern");
+        customPatternField.setDisable(true);
+
+        HBox patternSelectionBox = new HBox(10,
+                patternComboBox,
+                customPatternToggle,
+                customPatternField
+        );
+
+        // Replace the simple regexField with the new pattern selection
         VBox regexControls = new VBox(10,
-                new Label("Regex Pattern:"), regexField,
+                new Label("Regex Pattern:"),
+                patternSelectionBox,
                 new Label("Replacement Text:"), replacementField,
                 new HBox(10, addFileBtn, processFilesBtn)
         );
@@ -63,6 +94,7 @@ public class FileProcessingController {
         mainContainer.setPadding(new Insets(15));
 
         // Event handlers
+        setupPatternSelectionHandlers();
         setupEventHandlers();
     }
 
@@ -100,6 +132,38 @@ public class FileProcessingController {
             } catch (IOException ex) {
                 LoggerUtil.logError("Error processing files", ex);
                 logTextArea.appendText("Error processing files: " + ex.getMessage() + "\n");
+            }
+        });
+    }
+
+    private void setupPatternSelectionHandlers() {
+        // Same implementation as in RegexToolController
+        customPatternToggle.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            patternComboBox.setDisable(newVal);
+            customPatternField.setDisable(!newVal);
+            if (newVal) {
+                regexField.setText(customPatternField.getText());
+            }
+        });
+
+        patternComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && !customPatternToggle.isSelected()) {
+                String pattern = switch (newVal) {
+                    case "Email" -> "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b";
+                    case "Date" -> "\\b\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}\\b";
+                    case "Time" -> "\\b\\d{1,2}:\\d{2}(:\\d{2})?\\b";
+                    case "Phone Number" -> "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b";
+                    case "URL" -> "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
+                    case "IP Address" -> "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b";
+                    default -> "";
+                };
+                regexField.setText(pattern);
+            }
+        });
+
+        customPatternField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (customPatternToggle.isSelected()) {
+                regexField.setText(newVal);
             }
         });
     }
