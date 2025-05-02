@@ -12,19 +12,7 @@ public class DataProcessingService {
                 .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
     }
 
-    public Map<String, Long> wordFrequencyAnalysis(String text) {
-        if (text == null || text.isEmpty()) {
-            return Collections.emptyMap();
-        }
 
-        return Arrays.stream(text.split("\\s+"))
-                .map(word -> word.replaceAll("[^a-zA-Z]", "").toLowerCase())
-                .filter(word -> !word.isEmpty())
-                .collect(Collectors.groupingBy(
-                        word -> word,
-                        Collectors.counting()
-                ));
-    }
 
     public List<String> findMostFrequentWords(Map<String, Long> wordFrequencyMap, int topN) {
         return wordFrequencyMap.entrySet().stream()
