@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class RegexUtil {
 
+    // Method to find all matches of a regex pattern in a given text and return them as a list
     public static List<String> findMatches(String text, String regex) {
         List<String> matches = new ArrayList<>();
         Pattern pattern = Pattern.compile(regex);
@@ -17,15 +19,19 @@ public class RegexUtil {
         return matches;
     }
 
+    // Method to replace all matches of a regex pattern in a given text with a replacement string and return the modified text
     public static String replaceMatches(String text, String regex, String replacement) {
-        return text.replaceAll(regex, replacement);
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.replaceAll(replacement);
     }
 
-    public static boolean isValidRegex(String regex) {
+    // Method to validate a regex pattern
+    public static boolean isValidRegexPattern(String regex) {
         try {
             Pattern.compile(regex);
             return true;
-        } catch (Exception e) {
+        } catch (PatternSyntaxException e) {
             return false;
         }
     }
