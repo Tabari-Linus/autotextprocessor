@@ -20,6 +20,13 @@ public class TextProcessor {
         return regexUtil.findMatches(text, regex);
     }
 
-
+    // Method to replace all matches of a regex pattern in a given text
+    // with a replacement string and return the modified text
+    public String replaceMatches(String text, String regex, String replacement) {
+        if (!regexUtil.isValidRegexPattern(regex)) {
+            throw new IllegalArgumentException("Not a valid regex pattern: " + regex);
+        }
+        return regexUtil.replaceMatches(text, regex, replacement);
+    }
 
 }
