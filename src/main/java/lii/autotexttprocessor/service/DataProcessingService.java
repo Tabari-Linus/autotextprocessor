@@ -22,10 +22,25 @@ public class DataProcessingService {
                 .collect(Collectors.toList());
     }
 
-    public String summarizeText(String text, int maxWords) {
-        return Arrays.stream(text.split("\\s+"))
-                .limit(maxWords)
-                .collect(Collectors.joining(" "));
+
+
+    public Map<String, Long> summarizeText(String inputText) {
+        return Arrays.stream(inputText.split("\\R")) // Split by lines
+                .flatMap(line -> Arrays.stream(line.split("\\W+"))) // Split lines into words
+                .filter(word -> !word.isBlank()) // Filter out blank words
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(
+                                word -> "Word Count", // Key for word count
+                                word -> 1L, // Increment word count
+                                Long::sum, // Merge function for word count
+                                LinkedHashMap::new // Maintain insertion order
+                        ),
+                        map -> {
+                            map.put("Line Count", inputText.lines().count());
+                            map.put("Character Count", inputText.chars().count());
+                            return map;
+                        }
+                ));
     }
 
     public List<String> extractSentences(String text) {
