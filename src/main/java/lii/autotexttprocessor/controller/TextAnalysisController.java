@@ -49,13 +49,13 @@ public class TextAnalysisController {
     }
 
     private void initializeUI() {
-        // Create UI components
+
         inputTextArea = new TextArea();
         inputTextArea.setPromptText("Enter text to analyze...");
 
         analyzeBtn = new Button("Analyze Text");
 
-        // Frequency table setup
+
         wordColumn = new TableColumn<>("Word");
         wordColumn.setCellValueFactory(new PropertyValueFactory<>("word"));
 
@@ -65,7 +65,7 @@ public class TextAnalysisController {
         frequencyTable = new TableView<>();
         frequencyTable.getColumns().addAll(wordColumn, countColumn);
 
-        // Stats labels
+
         VBox statsBox = new VBox(5,
                 new Label("Text Statistics:"),
                 lineCountLabel = new Label("Lines: 0"),
@@ -76,7 +76,7 @@ public class TextAnalysisController {
         sentencesListView = new ListView<>();
 
         loadFileBtn = new Button("Load from File");
-        // Layout
+
         mainContainer = new VBox(15,
                 new Label("Input Text:"), inputTextArea,
                 loadFileBtn,
@@ -103,7 +103,7 @@ public class TextAnalysisController {
 
         mainContainer.setPadding(new Insets(15));
 
-        // Event handlers
+
         analyzeBtn.setOnAction(e -> analyzeText());
     }
 
@@ -111,19 +111,19 @@ public class TextAnalysisController {
         try {
             String text = inputTextArea.getText();
 
-            // Word frequency
+
             Map<String, Long> frequencyMap = dataProcessingService.wordFrequency(text);
             ObservableList<WordFrequency> frequencyData = FXCollections.observableArrayList();
             frequencyMap.forEach((word, count) -> frequencyData.add(new WordFrequency(word, count)));
             frequencyTable.setItems(frequencyData);
 
-            // Text statistics
+
             Map<String, Long> stats = dataProcessingService.summarizeText(text);
             lineCountLabel.setText("Lines: " + stats.getOrDefault("Line Count", 0L));
             wordCountLabel.setText("Words: " + stats.getOrDefault("Word Count", 0L));
             charCountLabel.setText("Characters: " + stats.getOrDefault("Character Count", 0L));
 
-            // Sentences
+
             sentencesListView.getItems().setAll(dataProcessingService.extractSentences(text));
 
         } catch (Exception e) {
@@ -140,7 +140,7 @@ public class TextAnalysisController {
         alert.showAndWait();
     }
 
-    // Helper class for table data
+
     public static class WordFrequency {
         private final String word;
         private final long count;
