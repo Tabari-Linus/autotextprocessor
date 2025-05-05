@@ -12,7 +12,13 @@ public class TextProcessor {
         this.regexUtil = new RegexUtil();
     }
 
-    // Method to find all matches of a regex pattern in a given text and return them as a list
+    /**
+     * Finds all matches of the regex pattern in the text.
+     *
+     * @param text  The input text to search.
+     * @param regex The regex pattern to match.
+     * @return A list of strings that match the regex pattern.
+     */
     public List<String> findMatchPattern(String text, String regex) {
         if (!regexUtil.isValidRegexPattern(regex)) {
             throw new IllegalArgumentException("Not a valid regex pattern: " + regex);
@@ -20,8 +26,14 @@ public class TextProcessor {
         return regexUtil.findMatches(text, regex);
     }
 
-    // Method to replace all matches of a regex pattern in a given text
-    // with a replacement string and return the modified text
+    /**
+     * Replaces all matches of the regex pattern in the text with the specified replacement string.
+     *
+     * @param text        The input text to process.
+     * @param regex       The regex pattern to match.
+     * @param replacement The string to replace the matches with.
+     * @return The modified text with replacements made.
+     */
     public String replaceMatches(String text, String regex, String replacement) {
         if (!regexUtil.isValidRegexPattern(regex)) {
             throw new IllegalArgumentException("Not a valid regex pattern: " + regex);
