@@ -48,7 +48,7 @@ public class FileProcessingController {
     }
 
     private void initializeUI() {
-        // Create UI components
+
         regexField = new TextField();
         regexField.setPromptText("Enter regex pattern");
 
@@ -83,7 +83,7 @@ public class FileProcessingController {
 
         HBox fileButtons = new HBox(10, addFileBtn, processFilesBtn, clearFilesBtn);
 
-        // Replace the simple regexField with the new pattern selection
+
         VBox regexControls = new VBox(10,
                 new Label("Regex Pattern:"),
                 patternSelectionBox,
@@ -98,7 +98,7 @@ public class FileProcessingController {
         );
         mainContainer.setPadding(new Insets(15));
 
-        // Event handlers
+
         setupPatternSelectionHandlers();
         setupEventHandlers();
         setupClearFilesHandler();
