@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import lii.autotexttprocessor.util.LoggerUtil;
+
 
 public class DashboardController {
     private GridPane mainContainer;
@@ -32,12 +32,12 @@ public class DashboardController {
         mainContainer.setVgap(20);
         mainContainer.setAlignment(Pos.CENTER);
 
-        // Create dashboard cards
+
         VBox regexCard = createDashboardCard("Regex Tools", "Perform powerful pattern matching and text manipulation", "primary", 0);
         VBox analysisCard = createDashboardCard("Text Analysis", "Analyze text for word frequency, statistics and more", "success", 1);
         VBox fileCard = createDashboardCard("File Processing", "Batch process multiple files with regex operations", "warning", 2);
         VBox dataCard = createDashboardCard("Data Management", "Manage your data entries with CRUD operations", "danger", 3);
-        // Add cards to grid
+
         mainContainer.add(regexCard, 0, 0);
         mainContainer.add(analysisCard, 1, 0);
         mainContainer.add(fileCard, 0, 1);
@@ -51,7 +51,7 @@ public class DashboardController {
         card.setMaxWidth(300);
         card.setMinHeight(200);
 
-        // Add styling based on type
+
         String bgColor = switch (styleClass) {
             case "primary" -> "#3498db";
             case "success" -> "#2ecc71";
@@ -73,7 +73,7 @@ public class DashboardController {
 
         card.getChildren().addAll(titleLabel, descLabel);
 
-        // Add hover effect
+
         card.setOnMouseEntered(e -> {
             card.setStyle("-fx-background-color: derive(" + bgColor + ", -20%); -fx-background-radius: 10; -fx-cursor: hand;");
         });
