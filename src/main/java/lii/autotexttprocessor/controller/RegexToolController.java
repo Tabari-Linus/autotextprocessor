@@ -52,7 +52,7 @@ public class RegexToolController {
     }
 
     private void initializeUI() {
-        // Create UI components
+
         inputTextArea = new TextArea();
         inputTextArea.setPromptText("Enter your text here...");
 
@@ -70,7 +70,7 @@ public class RegexToolController {
         resultTextArea = new TextArea();
         resultTextArea.setEditable(false);
 
-        // Layout
+
         patternComboBox = new ComboBox<>();
         patternComboBox.setPromptText("Select common pattern");
         patternComboBox.setItems(FXCollections.observableArrayList(
@@ -101,13 +101,14 @@ public class RegexToolController {
         mainContainer = new VBox(15,
                 new Label("Input Text:"), inputTextArea,
                 regexControls,
-                new Label("Matches Found:"), matchesListView,
-                new Label("Result:"), resultTextArea
+                new Label("Result:"), resultTextArea,
+                new Label("Matches Found:"), matchesListView
+
         );
         mainContainer.setPadding(new Insets(15));
 
         setupPatternSelectionHandlers();
-        // Event handlers
+
         setupFileHandlers();
         setupEventHandlers();
 
@@ -155,7 +156,7 @@ public class RegexToolController {
     }
 
     private void setupPatternSelectionHandlers() {
-        // Toggle between predefined and custom patterns
+
         customPatternToggle.selectedProperty().addListener((obs, oldVal, newVal) -> {
             patternComboBox.setDisable(newVal);
             customPatternField.setDisable(!newVal);
@@ -179,7 +180,7 @@ public class RegexToolController {
             }
         });
 
-        // Sync custom pattern field with regex field
+
         customPatternField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (customPatternToggle.isSelected()) {
                 regexField.setText(newVal);
