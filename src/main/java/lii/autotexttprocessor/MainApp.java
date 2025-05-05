@@ -18,17 +18,17 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Create main layout with menu bar
+
             BorderPane root = new BorderPane();
 
-            // Create and add menu bar
+
             root.setTop(createMenuBar());
 
-            // Create main tab pane
+
             TabPane tabPane = new TabPane();
             tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-            // Add tabs - Dashboard first
+
             Tab dashboardTab = new Tab("Dashboard", new DashboardController(tabPane).getView());
             Tab regexTab = new Tab("Regex Tools", new RegexToolController(tabPane).getView());
             Tab textAnalysisTab = new Tab("Text Analysis", new TextAnalysisController(tabPane).getView());
@@ -38,7 +38,7 @@ public class MainApp extends Application {
             tabPane.getTabs().addAll(dashboardTab, regexTab, textAnalysisTab, fileProcessingTab, dataManagementTab);
             root.setCenter(tabPane);
 
-            // Set up scene and stage
+
             Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
             scene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
 
@@ -57,7 +57,6 @@ public class MainApp extends Application {
 
         MenuBar menuBar = new MenuBar();
 
-        // File Menu
         Menu fileMenu = new Menu("File");
         MenuItem openItem = new MenuItem("Open");
         MenuItem saveItem = new MenuItem("Save");
@@ -66,7 +65,6 @@ public class MainApp extends Application {
 
         fileMenu.getItems().addAll(openItem, saveItem, loadItem, new SeparatorMenuItem(), exitItem);
 
-        // Edit Menu
         Menu editMenu = new Menu("Edit");
         MenuItem undoItem = new MenuItem("Undo");
         MenuItem redoItem = new MenuItem("Redo");
@@ -75,7 +73,7 @@ public class MainApp extends Application {
 
         editMenu.getItems().addAll(undoItem, redoItem, new SeparatorMenuItem(), copyItem, pasteItem);
 
-        // Help Menu
+
         Menu helpMenu = new Menu("Help");
         MenuItem aboutItem = new MenuItem("About");
         MenuItem docsItem = new MenuItem("Documentation");
@@ -84,7 +82,7 @@ public class MainApp extends Application {
 
         menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);
 
-        // Set event handlers
+
         exitItem.setOnAction(e -> System.exit(0));
         aboutItem.setOnAction(e -> showAboutDialog());
 
