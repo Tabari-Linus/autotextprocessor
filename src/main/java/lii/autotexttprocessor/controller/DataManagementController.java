@@ -47,7 +47,7 @@ public class DataManagementController {
     }
 
     private void initializeUI() {
-        // Create UI components
+
         idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -75,7 +75,7 @@ public class DataManagementController {
         deleteBtn = new Button("Delete");
         clearBtn = new Button("Clear");
 
-        // Layout
+
         VBox formBox = new VBox(10,
                 new Label("ID:"), idField,
                 new Label("Name:"), nameField,
@@ -89,13 +89,13 @@ public class DataManagementController {
         );
         mainContainer.setPadding(new Insets(15));
 
-        // Event handlers
+
         setupEventHandlers();
         loadData();
     }
 
     private void setupEventHandlers() {
-        // Table selection listener
+
         dataTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 idField.setText(String.valueOf(newSelection.getId()));
